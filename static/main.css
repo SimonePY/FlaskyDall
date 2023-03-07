@@ -1,0 +1,24 @@
+.background {
+  width: 100%;
+  height: 600px;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.flasky-text {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-style: italic;
+  text-align: left;
+  font-size: 50px;
+  color: #baa3a3;
+}
+
+.prompt-text,
+.size-text,
+.quantity-text {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-style: italic;
+  text-align: left;
+  font-size: 20px;
+  color: #7a3fdf;
+}
