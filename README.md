@@ -1,6 +1,6 @@
 # FlaskyDall
 
-Flasky Application for generate a image using DALL-E API
+Flask Application for generate a image using DALL-E API
 
 # Usage
 
