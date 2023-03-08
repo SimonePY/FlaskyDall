@@ -8,9 +8,9 @@
 .flasky-text {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-style: italic;
-  text-align: left;
+  text-align: center;
   font-size: 50px;
-  color: #baa3a3;
+  color: #bf7b5a;
 }
 
 .prompt-text,

@@ -1,19 +1,45 @@
-from flask import Flask, render_template
+import os
+from typing import List
+from dotenv import load_dotenv
+from flask import Flask, render_template, request
+import openai as oa
 
-app = Flask(__name__)
+app: Flask = Flask(__name__)
 
-@app.route('/')
-def home():
+
+def check_env_file() -> None:
+    if not os.path.isfile(".env"):
+        with open(".env", "w") as f:
+            f.write("OPENAI_API_KEY=")
+
+
+def create_images_from_prompt(prompt: str, size: str, quantity: int) -> List[str]:
     try:
-        # render the home page template
-        return render_template('home.html')
+        response = oa.Image.create(prompt=prompt, size=size, n=quantity)
+        return [img["url"] for img in response["data"]]
     except Exception as e:
-        # log the error and display a custom error page
-        app.logger.error(str(e))
-        return render_template('', error=str(e)), 500
+        return [str(e)]
+
+
+@app.before_first_request
+def cache_api_key() -> None:
+    app.api_key = os.getenv("OPENAI_API_KEY")
+    if not app.api_key:
+        raise ValueError("OPENAI_API_KEY is not set in environment variables")
+
+
+@app.route("/", methods=["GET", "POST"])
+def home() -> str:
+    images: List[str] = []
+    if request.method == "POST":
+        prompt_text: str = request.form["prompt"]
+        image_size: str = request.form["size"]
+        image_quantity: int = int(request.form["quantity"])
+        images = create_images_from_prompt(prompt_text, image_size, image_quantity)
+    return render_template("home.html", images=images)
+
 
 if __name__ == "__main__":
-    try:
-        app.run(port=5000)
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    check_env_file()
+    load_dotenv()
+    app.run(port=5000, debug=True)
