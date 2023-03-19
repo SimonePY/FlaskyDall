@@ -1,40 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FlaskyDall</title>
-  <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <link rel="stylesheet" href="{{ url_for('static', filename='flasky.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlaskyDall</title>
+    <link rel="icon" href="{{ url_for('static', filename='icon.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='flasky.css') }}">
 </head>
-
-<body class="background">
-  <h2 class="flasky-text">FlaskyDall</h2>
-  <form action="#" method="post">
-    <div class="form-group">
-      <label for="prompt" class="prompt-text">Enter your image prompt</label>
-      <input type="text" class="form-control" name="prompt" id="prompt" placeholder="Man using a futuristic computer"
-        required>
-      <label for="size" class="size-text">Enter desired image size</label>
-      <input type="text" class="form-control" name="size" id="size" placeholder="512x512" required>
-      <label for="quantity" class="quantity-text">Enter image quantity</label>
-      <input type="number" class="form-control" name="quantity" id="quantity" placeholder="1" required>
-      <button type="generate" class="btn btn-primary">Generate</button>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">FlaskyDall</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ request.path }}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/SimonePY/FlaskyDall" target="_blank">Github</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://openai.com/" target="_blank">OpenAI</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </form>
-  <div class="row">
-    {% for image in images %}
-    <div class="col-lg-4">
-      <img src="{{image}}" class="img-fluid generated-image" >
+</nav>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4>Generate a image</h4>
+                </div>
+                <div class="card-body">
+                    <form action="#" method="post">
+                        <div class="form-group mb-3">
+                            <label for="text-prompt" class="form-label">Text Prompt</label>
+                            <textarea class="form-control" name="text-prompt" id="text-prompt" rows="1"
+                                      placeholder="Man using a futuristic computer" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="image-size" class="form-label">Image Size</label>
+                            <select class="form-select" name="image-size" id="image-size" required>
+                                <option value="">Select size</option>
+                                <option value="256x256">256x256</option>
+                                <option value="512x512">512x512</option>
+                                <option value="1024x1024">1024x1024</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="image-quantity" class="form-label">Quantity of images</label>
+                            <select class="form-select" name="image-quantity" id="image-quantity" required>
+                                <option value="">Select quantity</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-dark">Generate</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    {% for img_url in images %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <img class="card-img-top" src="{{ img_url }}">
+            <div class="card-body">
+                <h5 class="card-title">Generated Image</h5>
+            </div>
+        </div>
     </div>
     {% endfor %}
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"
-    defer></script>
-</body>
+</div>
 
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <p>&hearts; Created with love by <a href="https://github.com/SimonePY">Simone</a></p>
+    </div>
+</footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"
+        defer></script>
 </html>

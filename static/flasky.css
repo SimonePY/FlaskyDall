@@ -1,24 +1,19 @@
-.background {
+body {
+  background-color: #36454F;
+}
+
+body, button, input, select, textarea,
+.navbar-brand, .nav-link,
+footer {
+  font-family: 'Roboto', sans-serif;
+}
+
+a {
+  color: white;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
   width: 100%;
-  height: 600px;
-  background: url('background.jpg') no-repeat center center fixed;
-  background-size: cover;
-}
-
-.flasky-text {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-style: italic;
-  text-align: center;
-  font-size: 50px;
-  color: #bf7b5a;
-}
-
-.prompt-text,
-.size-text,
-.quantity-text {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  font-style: italic;
-  text-align: left;
-  font-size: 20px;
-  color: #7a3fdf;
 }

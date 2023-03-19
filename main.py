@@ -1,45 +1,47 @@
 import os
-from typing import List
+from typing import Dict, List
+
+import openai
 from dotenv import load_dotenv
 from flask import Flask, render_template, request
-import openai as oa
 
-app: Flask = Flask(__name__)
+app = Flask(__name__)
+
+if not os.path.isfile(".env"):
+    with open(".env", "w") as f:
+        f.write("OPENAI_API_KEY=")
+
+load_dotenv()
 
 
-def check_env_file() -> None:
-    if not os.path.isfile(".env"):
-        with open(".env", "w") as f:
-            f.write("OPENAI_API_KEY=")
-
-
-def create_images_from_prompt(prompt: str, size: str, quantity: int) -> List[str]:
+def create_images_from_prompt(form_data: Dict[str, str]) -> List[str]:
+    prompt = form_data.get("text-prompt")
+    size = form_data.get("image-size")
+    quantity = int(form_data.get("image-quantity", 0))
+    if not all([prompt, size, quantity]):
+        return []
     try:
-        response = oa.Image.create(prompt=prompt, size=size, n=quantity)
-        return [img["url"] for img in response["data"]]
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        response = openai.Image.create(prompt=prompt, size=size, n=quantity)
+        if "data" in response:
+            return [img["url"] for img in response["data"]]
+        elif "error" in response:
+            return [response["error"]["message"]]
+        else:
+            return response
     except Exception as e:
         return [str(e)]
 
 
-@app.before_first_request
-def cache_api_key() -> None:
-    app.api_key = os.getenv("OPENAI_API_KEY")
-    if not app.api_key:
-        raise ValueError("OPENAI_API_KEY is not set in environment variables")
-
-
 @app.route("/", methods=["GET", "POST"])
 def home() -> str:
-    images: List[str] = []
+    images = []
     if request.method == "POST":
-        prompt_text: str = request.form["prompt"]
-        image_size: str = request.form["size"]
-        image_quantity: int = int(request.form["quantity"])
-        images = create_images_from_prompt(prompt_text, image_size, image_quantity)
+        images = create_images_from_prompt(request.form)
     return render_template("home.html", images=images)
 
 
 if __name__ == "__main__":
-    check_env_file()
-    load_dotenv()
-    app.run(port=5000, debug=True)
+    if not os.getenv("OPENAI_API_KEY"):
+        raise ValueError("OPENAI_API_KEY is not set in environment variables")
+    app.run()
